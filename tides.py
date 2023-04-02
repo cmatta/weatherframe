@@ -4,7 +4,7 @@ import pandas as pd
 import datetime
 import requests
 import io
-from PIL import Image
+from PIL import Image, ImageDraw
 import matplotlib.dates as mdates
 
 def get_tide_data(station_id):
