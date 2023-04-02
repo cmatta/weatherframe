@@ -30,9 +30,10 @@ def get_tide_data(station_id):
 
     return tide_df
 
+
 def plot_tide_data(tide_data):
     # Set the desired image size and DPI
-    img_width, img_height = 800, 480
+    img_width, img_height = 800, 240
     dpi = 100
 
     # Plot the tide data
