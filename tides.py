@@ -64,10 +64,10 @@ def plot_tide_data(tide_data):
 
     return image
 
-
-tide_data = get_tide_data(8465705)
-img = plot_tide_data(tide_data)
-inky.inky_display = inky.auto()
-inky.inky_display.set_image(img)
-inky.inky_display.set_border(inky.BLACK)
-inky.inky_display.show()
+if __name__ == "__main__":
+    tide_data = get_tide_data(8465705)
+    img = plot_tide_data(tide_data)
+    inky.inky_display = inky.auto()
+    inky.inky_display.set_image(img)
+    inky.inky_display.set_border(inky.BLACK)
+    inky.inky_display.show()
