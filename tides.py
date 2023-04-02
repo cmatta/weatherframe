@@ -54,7 +54,8 @@ def plot_tide_data(tide_data):
     plt.xticks(rotation=30)
     last_updated = f"Updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
     fig.text(0.5, 0.95, last_updated, fontsize=10, ha='right', va='center',
-         bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2'))    plt.tight_layout()
+         bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2'))
+    plt.tight_layout()
 
     # Save the plot as a PNG in a BytesIO buffer
     buf = io.BytesIO()
