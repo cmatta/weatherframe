@@ -43,18 +43,18 @@ def plot_tide_data(tide_data):
 
     # Add a vertical red line for the current time
     current_time = datetime.datetime.now()
-    ax.axvline(current_time, color='red', linestyle='--', label='Current time')
+    ax.axvline(current_time, color='red', linestyle='--', label='Now')
 
     # Customize the plot
     ax.set_xlabel("Time")
     ax.set_ylabel("Tide height (ft)")
-    ax.set_title("Tide - Madison, CT")
+    ax.set_title("Tide")
     ax.legend()
     ax.grid(True)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
     plt.xticks(rotation=30)
-    last_updated = f"Updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
-    fig.text(0.95, 0.95, last_updated, fontsize=10, ha='right', va='center')
+    # last_updated = f"Updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
+    # fig.text(0.95, 0.95, last_updated, fontsize=10, ha='right', va='center')
     plt.tight_layout()
 
     # Save the plot as a PNG in a BytesIO buffer
@@ -68,9 +68,18 @@ def plot_tide_data(tide_data):
     return image
 
 if __name__ == "__main__":
+    WIDTH = 800
+    HEIGHT = 480
+    PADDING = 5
+
     tide_data = get_tide_data(8465705)
-    img = plot_tide_data(tide_data)
+    tide_img = plot_tide_data(tide_data)
+        
+    image = Image.new("RGB", (WIDTH, HEIGHT), (255, 255, 255))
+    draw = ImageDraw.Draw(image)
+    image.paste(tide_img, (0,240))
+
     inky.inky_display = inky.auto()
-    inky.inky_display.set_image(img)
+    inky.inky_display.set_image(image)
     inky.inky_display.set_border(inky.BLACK)
     inky.inky_display.show()
