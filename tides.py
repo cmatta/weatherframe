@@ -52,11 +52,9 @@ def plot_tide_data(tide_data):
     ax.grid(True)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
     plt.xticks(rotation=30)
-    last_updated = f"Last updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
-    ax.annotate(last_updated, xy=(1, 1), xycoords='axes fraction', fontsize=10, 
-                horizontalalignment='right', verticalalignment='top', 
-                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2'))
-    plt.tight_layout()
+    last_updated = f"Updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
+    fig.text(0.5, 0.95, last_updated, fontsize=10, ha='right', va='center',
+         bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2'))    plt.tight_layout()
 
     # Save the plot as a PNG in a BytesIO buffer
     buf = io.BytesIO()
