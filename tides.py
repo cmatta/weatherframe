@@ -60,7 +60,7 @@ def plot_tide_data(tide_data):
     ax.set_title("Tide")
     ax.legend()
     ax.grid(True)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%I:%M %p'))
     plt.xticks(rotation=30)
     # last_updated = f"Updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
     # fig.text(0.95, 0.95, last_updated, fontsize=10, ha='right', va='center')
