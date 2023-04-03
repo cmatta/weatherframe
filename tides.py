@@ -6,6 +6,7 @@ import requests
 import io
 from PIL import Image, ImageDraw
 import matplotlib.dates as mdates
+import time
 
 def get_tide_data(station_id):
     # Define a start and end time for tide data
@@ -16,9 +17,17 @@ def get_tide_data(station_id):
     start_time_str = start_time.strftime("%Y%m%d %H:%M")
     end_time_str = end_time.strftime("%Y%m%d %H:%M")
 
+    # determin if it's daylight savings
+    current_time = time.time()
+    local_time = time.localtime(current_time)
+    dst_in_effect = local_time.tm_isdst > 0 or time.daylight > 0
+    if dst_in_effect:
+        tz = "lst_ldt"
+    else:
+        tz = "lst"
     # Specify the URL for the NOAA API
-    noaa_api_url = f"https://tidesandcurrents.noaa.gov/api/datagetter?begin_date={start_time_str}&end_date={end_time_str}&station={station_id}&product=predictions&datum=MLLW&units=english&time_zone=gmt&interval=h&format=json"
-
+    noaa_api_url = f"https://tidesandcurrents.noaa.gov/api/datagetter?begin_date={start_time_str}&end_date={end_time_str}&station={station_id}&product=predictions&datum=MLLW&units=english&time_zone={tz}&interval=h&format=json"
+ 
     # Send a request to the NOAA API and parse the response
     response = requests.get(noaa_api_url)
     tide_data = response.json()
