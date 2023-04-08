@@ -61,7 +61,7 @@ def plot_tide_data(tide_data):
     ax.axvline(current_time, color='red', linestyle='-', label='Now')
 
     # Fill the area below the line graph with a blue color
-    ax.fill_between(tide_times, tide_heights, color="lightblue", alpha=0.2)
+    ax.fill_between(tide_times, tide_heights, color="blue", alpha=0.2)
 
     # Customize the plot
     # ax.set_ylabel("Tide height (ft)")
