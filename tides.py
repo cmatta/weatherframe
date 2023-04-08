@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import datetime
 import requests
+from scipy.signal import argrelextrema
+import numpy as np
 import io
 from PIL import Image, ImageDraw
 import matplotlib.dates as mdates
@@ -17,7 +19,7 @@ def get_tide_data(station_id):
     start_time_str = start_time.strftime("%Y%m%d %H:%M")
     end_time_str = end_time.strftime("%Y%m%d %H:%M")
 
-    # determin if it's daylight savings
+    # determine if it's daylight savings
     current_time = time.time()
     local_time = time.localtime(current_time)
     dst_in_effect = local_time.tm_isdst > 0 or time.daylight > 0
@@ -45,25 +47,44 @@ def plot_tide_data(tide_data):
     img_width, img_height = 800, 240
     dpi = 100
 
-    # Plot the tide data
+
+
+    tide_times = tide_data['t']
+    tide_heights = tide_data['v']
+
+  
+    # Create a new figure and axis for the plot
     fig, ax = plt.subplots(figsize=(img_width / dpi, img_height / dpi), dpi=dpi)
-    ax.plot(tide_data['t'], tide_data['v'])
-    ax.fill_between(tide_data['t'], tide_data['v'], color='skyblue', alpha=0.4)
+
+    # Plot the tide heights vs. time
+    ax.plot(tide_times, tide_heights)
 
     # Add a vertical red line for the current time
     current_time = datetime.datetime.now()
     ax.axvline(current_time, color='red', linestyle='--', label='Now')
 
+    # Fill the area below the line graph with a blue color
+    ax.fill_between(tide_times, tide_heights, color="blue", alpha=0.2)
+
     # Customize the plot
-    ax.set_xlabel("Time")
     ax.set_ylabel("Tide height (ft)")
-    ax.set_title("Tide")
+    ax.set_title("Tides")
     ax.legend()
     ax.grid(True)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%I:%M %p'))
-    plt.xticks(rotation=30)
-    # last_updated = f"Updated: {current_time.strftime('%Y-%m-%d %H:%M')}"
-    # fig.text(0.95, 0.95, last_updated, fontsize=10, ha='right', va='center')
+    ax.tick_params(axis='x', which='both', labelbottom=False)
+
+    # Annotate the peaks and valleys of the tide graph with the 12-hour am/pm time
+    for i in range(1, len(tide_heights)-1):
+        # peaks
+        if tide_heights[i-1] < tide_heights[i] and tide_heights[i] > tide_heights[i+1]:
+            tide_time = tide_times[i].strftime('%-I:%M %p')
+            ax.annotate(tide_time, (tide_times[i], tide_heights[i]), xytext=(-8, 8), textcoords='offset points', ha='left', va='bottom', fontsize=8, color='blue')
+        # valleys
+        elif tide_heights[i-1] > tide_heights[i] and tide_heights[i] < tide_heights[i+1]:
+            tide_time = tide_times[i].strftime('%-I:%M %p')
+            ax.annotate(tide_time, (tide_times[i], tide_heights[i]), xytext=(-8, -8), textcoords='offset points', ha='left', va='top', fontsize=8, color='blue')
+
+
     plt.tight_layout()
 
     # Save the plot as a PNG in a BytesIO buffer
@@ -80,15 +101,18 @@ if __name__ == "__main__":
     WIDTH = 800
     HEIGHT = 480
     PADDING = 5
+    REFRESH = 5*60
 
-    tide_data = get_tide_data(8465705)
-    tide_img = plot_tide_data(tide_data)
-        
-    image = Image.new("RGB", (WIDTH, HEIGHT), (255, 255, 255))
-    draw = ImageDraw.Draw(image)
-    image.paste(tide_img, (0,240))
+    while True:
+        tide_data = get_tide_data(8465705)
+        tide_img = plot_tide_data(tide_data)
+            
+        image = Image.new("RGB", (WIDTH, HEIGHT), (255, 255, 255))
+        draw = ImageDraw.Draw(image)
+        image.paste(tide_img, (0,240))
 
-    inky.inky_display = inky.auto()
-    inky.inky_display.set_image(image)
-    inky.inky_display.set_border(inky.BLACK)
-    inky.inky_display.show()
+        inky.inky_display = inky.auto()
+        inky.inky_display.set_image(image)
+        inky.inky_display.set_border(inky.BLACK)
+        inky.inky_display.show()
+        time.sleep(REFRESH)
