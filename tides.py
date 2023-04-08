@@ -47,12 +47,9 @@ def plot_tide_data(tide_data):
     img_width, img_height = 800, 240
     dpi = 100
 
-
-
     tide_times = tide_data['t']
     tide_heights = tide_data['v']
 
-  
     # Create a new figure and axis for the plot
     fig, ax = plt.subplots(figsize=(img_width / dpi, img_height / dpi), dpi=dpi)
 
@@ -61,17 +58,25 @@ def plot_tide_data(tide_data):
 
     # Add a vertical red line for the current time
     current_time = datetime.datetime.now()
-    ax.axvline(current_time, color='red', linestyle='--', label='Now')
+    ax.axvline(current_time, color='red', linestyle='-', label='Now')
 
     # Fill the area below the line graph with a blue color
-    ax.fill_between(tide_times, tide_heights, color="blue", alpha=0.2)
+    ax.fill_between(tide_times, tide_heights, color="lightblue", alpha=0.2)
 
     # Customize the plot
-    ax.set_ylabel("Tide height (ft)")
+    # ax.set_ylabel("Tide height (ft)")
     ax.set_title("Tides")
     ax.legend()
-    ax.grid(True)
+    ax.grid(False)
+    ax.yaxis.set_ticks([])
+    ax.xaxis.set_ticks([])
+    ax.set_yticklabels([])
     ax.tick_params(axis='x', which='both', labelbottom=False)
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
 
     # Annotate the peaks and valleys of the tide graph with the 12-hour am/pm time
     for i in range(1, len(tide_heights)-1):
