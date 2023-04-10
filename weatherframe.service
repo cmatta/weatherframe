@@ -1,0 +1,13 @@
+[Unit]
+Description=WeatherFrame Tides Service
+After=network.target
+
+[Service]
+User=chris
+WorkingDirectory=/home/chris/weatherframe
+ExecStart=/usr/bin/python3 /home/chris/weatherframe/tides.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
